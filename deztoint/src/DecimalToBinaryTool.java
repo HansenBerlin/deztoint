@@ -178,9 +178,9 @@ public class DecimalToBinaryTool
     // jetzt:
     // Index   Wert
     //     0   0
-    //     0   0
-    //     0   1
-    //     0   1
+    //     1   0
+    //     2   1
+    //     3   1
     //
     // Im Loop, der solange läuft bis i so groß wie die Arraylänge ist wird nun einfach jedesmal wenn an der
     // Indexposition die wir gerade untersuchen eine 1 gefunden wird 2 hoch der Indexnummer zu decimalReturnValue
