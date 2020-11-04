@@ -1,112 +1,124 @@
 import javax.swing.*;
 
+/**
+ * Author:    Hannes
+ * Created:   04.11.2020
+ * 
+ * CC BY
+ **/
+
 public class DecimalToBinaryTool 
 {
-    private static String bitSequence = "";
+    // Deklarieren der Variable die ich später ausgeben möchte
+    private static String binaryValue = "";
 
     public static void main(String[] args) 
     {
-        long valueToCalculate = 0;
+        // Abfrage des Inputs und speichern in valueToCalculate.
+        // Der Input wird von der Methode "validateUserInput" geprüft (s.u.)        
+        long valueToCalculate = validateUserInput();
 
-		String userInput = JOptionPane.showInputDialog("Bitte Ganzzahl eingeben!");		
-        calculateDecimalToBinary(Integer.parseInt(userInput));		
+        // Hier wird die Methode aufgerufen, die den Wert von valueToCalculate umrechnet 
+        calculateDecimalToBinary(valueToCalculate);		
         
-        JOptionPane.showMessageDialog(new JFrame(), valueToCalculate + " in Binärschreibweise: " + bitSequence + "\n" +
-            bitSequence + " enthält " + printBitCount() + " zusammenhängende Bits.", "Decimal To Binary Tool", JOptionPane.PLAIN_MESSAGE);
+        // Hier angekommen wurde durch die Methode calculateDecimalToBinary in der Variablen
+        // bitSequence das Ergebnis bereits gespeichert. Jetzt muss noch alles ausgegeben werden, 
+        // konsequenterweise mittels einer GUI, da die Abfrage ja auch dadurch erfolgt ist. 
+        // Die dritte Methode printBitCount wird direkt in der Ausgabe abgerufen und ihr Wert ausgegeben 
+        JOptionPane.showMessageDialog(new JFrame(), valueToCalculate + " in Binärschreibweise: " + binaryValue + "\n" +
+        binaryValue + " enthält " + printBitCount() + " zusammenhängende Bits.", "Decimal To Binary Tool", JOptionPane.PLAIN_MESSAGE);
 	}
     
     
 	static String calculateDecimalToBinary(long valueToConvert)
 	{
         long decimalValue = 1;
+        
+        // BEISPIEL // wir nehmen an der übergebene Wert valueToConvert war 12 (also binär 1100)        
 
-        //
-        // Beispiel Input war 8 (also binär 1000)
-        //
-
-        // Der Dezimalwert 0 entspricht dem Binärwert 0, also 
-        // bei Input 0 = Output 0 und Funktion beenden
+        // Nur im einen Fall, dass der umzurechnende Wert 0 Beträgt soll auch das Ergebnis 0 sein 
+        // und die Methode beendet werden. Denn 0 in Dezimalschreibweise ist auch 0 in Binärschreibweise
 	    if(valueToConvert == 0)
 	    {
-            System.out.print("0"); 
+            binaryValue += "0";
             return "";
         }
-        // BEISPIEL: überspringen 
+        // BEISPIEL // Überspringt diese Methode, weil 12 != 0 ist
 
-        // Solange decimalValue kleiner als der Input ist wird durch die Linksverschiebung der Wert
-        // verdoppelt, bis decimalValue größer als der Input ist. Die Verdopplung findet im Binärsystem statt,
-        // also:
 
-        // binär    decimal
-        // 1        =       1   verschiebe nach links, Ergebnis:
-        // 10       =       2   verschiebe nach links, Ergebnis:
-        // 100      =       4   verschiebe nach links, Ergebnis:
-        // 1000     =       8   verschiebe nach links, Ergebnis:
-        // usw.  
-
+        // Solange decimalValue kleiner als valueToConvert ist wird durch die Linksverschiebung der Stelle
+        // im Binärsystem der Wert verdoppelt, bis decimalValue schließlich größer als valueToConvert ist. 
         while(decimalValue<valueToConvert)
         {
             decimalValue <<= 1;
-        }  
-        // BEISPIEL: dV ist 1
-        // BEISPIEL: wird 2 4 8 (4 Loops)
-        // BEISPIEL: Abbruch
-        // BEISPIEL: decimalValue ist jetzt 8
+        }
+        // BEISPIEL //
+        // Schleifendurchlauf      decimalValue der VOR Schleifendurchlauf geprüft wird       decimalValue NACH Durchlauf        enspricht Binärwert       
+        //                  1                                                         1                                 2                         10
+        //                  2                                                         2                                 4                        100                   
+        //                  3                                                         4                                 8                       1000
+        //                  4                                                         8                                16                      10000
+        //           ABBBRUCH                                                        16                                 -                          -
 
-        // Nun wird einmal nach rechts verschoben, also der Binärwert halbiert, kann aber raus, Anpassung s.o
-        // decimalValue>>=1;
-
-        // Und nun solange, bis der decimalValue wieder 0 ist:
-        // eine 1 ausgegeben wenn der input und der decimalValue nicht null sind
-        // oder ansonsten eine 0 ausgegeben bzw. rechts an die Ausgabe angefügt
-        // danach gibt es eine Rechtsverschiebung und der decimalValue wird halbiert  
-        
-        // BEISPIEL: 
-        // schreibe 1
-        // dV = 4
-        // schreibe 0
-        // dV = 2
-        // schreibe 0
-        // dV = 1
-        // schreibe 0
-        // dV = 0
-        // Abbruch
-
-        // Bitwise Erklärung:
-        // erstmal Addition klären für binärzahlen
-        // dann ist es klar:
-        //      1000
-        //     &1000
-        //     =1000
-        // denn: wenn true plus true dann true. also ist 1 und 1 gleich 1
-        // und: wenn true plus false (oder false plus false), false. ALso ist 0 und 0 gleich 0
-        // Im ersten Durchlauf ist also das Ergebnis 1000 (bzw 8 als Dezimalzahl), was NICHT 0 ist. ALso wird eine 1 geschrieben
-        // decimalValue wird nun durch die Verschiebung auf 4 gesetzt (oder 0100)
-        // Im zweiten Durchlauf wird folgendes verglichen:
-        //      1000
-        //     &0100
-        //     =0000
-        // 0000 binär ist auch 0 dezimal, die Bedingung a ist ungleich 0 wird also NICHT erfüllt deshalb wird eine 1 geschrieben
+        // Mit dieser Funktion soll nun aus dem ermittelten Decimal Value ein String in
+        // Form eines Binärwertes erzeugt werden. Zunächst wird geprüft, ob decimalValue
+        // gleich 0 ist, solange dies nicht der Fall ist, läft die Schleife.
+        // In der ersten Abfrage (valueToConvert & decimalValue) passiert folgendes:
+        // Der Binärwert beider Variablen wird verglichen. Dies passiert für jede einzelne
+        // Stelle. Nach der Logik des "AND" wird nur ein true (1) zurückgegeben wenn
+        // beide Werte auch true (1) sind. Wenn der ermittelte Binärwert nicht 0 ist, wird 
+        // dem string binaryValue eine 1 hinzugefügt.
+        // 
+        // BEISPIEL //
+        // valueToConvert an diesem Punkt:          12
+        // decimalValue an diesem Punkt:            16
+        // Umrechnung binär valueToConvert:      01100
+        // Umrechnung binär decimalValue:        10000
+        // Vergleich:                            00000   -->  Da es keinen Vergleich 1 & 1 = 1 gibt, ist der Wert 0
+        // Der Else Block wird ausgelöst und binaryValue ist nun 0
+        // Nun wird noch eine Stelle nach rechts verschoben, so dass decimalValue jetzt 8 ist
+        //
+        // zur Verdeutlichung noch der zweite Durchlauf (weil ja decimalValue nach wie vor NICHT 0 ist):
+        // valueToConvert an diesem Punkt:          12
+        // decimalValue an diesem Punkt:             8
+        // Umrechnung binär valueToConvert:       1100
+        // Umrechnung binär decimalValue:         1000
+        // Vergleich:                             1000   -->  1 und 1 an der ersten Stelle ist 1, die Bedingung ist also erfüllt (!= 0)
+        // Der If Block wird ausgelöst und binaryValue ist nun 0 + die nun hinzugefügte 1, also 01
+        // Rechtsverschiebung, decimalValue ist jetzt 4
+        //
+        // USW., bis decimalValue 0 ist, die Schleife damit beendet wird und binary value mit dem 
+        // Wert 01100 zurückgegeben und gleichzeitig in der ganz oben angelegten Variablen gespeichert wird 
 	    while(decimalValue != 0)
 	    {
-            //if((valueToConvert&decimalValue) != 0) System.out.print("1");
-        	//else System.out.print("0");
-            //decimalValue>>=1;
-            if((valueToConvert & decimalValue) != 0) bitSequence += "1";
-        	else bitSequence += "0";
+            if((valueToConvert & decimalValue) != 0) binaryValue += "1";
+        	else binaryValue += "0";
             decimalValue >>= 1;
         }
         
-        return bitSequence;
+        return binaryValue;
 	}
 
     
+    // Da die Originalfunktion ähnlich wie die obige funktioniert hat, hier eine andere und
+    // besser nachvollziehbare Herangehensweise. Die Methode nimmt keine Argumente an und
+    // gibt einen int zurück, der der Anzahl von zusammenhängenden Einsen im BinärString entspricht
     static int printBitCount()
     {
+        // Dekl der Variablen. Die Initialisierung muss man nicht machen, da aber hier später
+        // der Wert als Bedingung abgefragt wird und wir Fehler vermeiden wollen, wwerden sie auf 0 gesetzt
         int maximumCount = 0;
         int currentCount = 0;
 
-        for (char singlBitInformation : bitSequence.toCharArray()) 
+        // die Schleife durchläuft alle Elemente (also Zeichen/Chars) in einem Element,
+        // hier dem String mit den Binärwerten. Also bei unserem Beispiel 12 fünfmal, da
+        // in dem String der Wert 01100 gespeichert ist
+        // Die Funktionsweise ist einfach: Wenn du eine 1 findest, erhöhe currentCount um 1
+        // Prüfe dann ob currentCount höher ist als der bisherige Rekordwert maximumCount.
+        // Wenn ja, überschreibe maxCount mit currentCount
+        // Wenn du eine 0 findest prüfe genau das gleiche, setze aber anschließend 
+        // currentCount auf 0 zurück. der Wert von maxCount kann also nie sinken
+        for (char singlBitInformation : binaryValue.toCharArray()) 
         {            
             if(singlBitInformation == '1')
             {
@@ -120,5 +132,19 @@ public class DecimalToBinaryTool
             }            
         }
         return maximumCount;
+    }
+
+
+    // Kleine Helfermethode zur Abfrage des Inputs. Die Schleife läuft einfach so lange
+    // und nervt mit der Abfrage bis eine gültige Zahlenfolge eingegeben wird ("\\d+")
+    // Sobald die Abfrage gültig ist endet die Schleife und der Wert wird zurückgegeben
+    static long validateUserInput()
+    {
+        String userInput = "";
+        while(!userInput.matches("\\d+"))
+        {
+            userInput = JOptionPane.showInputDialog("Bitte gültige Ganzzahl eingeben!");	
+        }
+        return Integer.parseInt(userInput);
     }
 }
