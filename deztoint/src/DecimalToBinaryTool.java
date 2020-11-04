@@ -26,7 +26,7 @@ public class DecimalToBinaryTool
         // konsequenterweise mittels einer GUI, da die Abfrage ja auch dadurch erfolgt ist. 
         // Die dritte Methode printBitCount wird direkt in der Ausgabe abgerufen und ihr Wert ausgegeben 
         JOptionPane.showMessageDialog(new JFrame(), valueToCalculate + " in Binärschreibweise: " + binaryValue + "\n" +
-        "Dieser Wert enthält " + printBitCount() + " zusammenhängende Bits.", "Decimal To Binary Tool", JOptionPane.PLAIN_MESSAGE);
+        "Dieser Wert enthält " + printBitCount() + " zusammenhängende Bits.", "Decimal To Binary Tool", JOptionPane.PLAIN_MESSAGE);  
 	}
     
     
@@ -138,13 +138,70 @@ public class DecimalToBinaryTool
     // Kleine Helfermethode zur Abfrage des Inputs. Die Schleife läuft einfach so lange
     // und nervt mit der Abfrage bis eine gültige Zahlenfolge eingegeben wird ("\\d+")
     // Sobald die Abfrage gültig ist endet die Schleife und der Wert wird zurückgegeben
-    static long validateUserInput()
+    static long validateUserInput() 
     {
         String userInput = "";
         while(!userInput.matches("\\d+"))
         {
             userInput = JOptionPane.showInputDialog("Bitte gültige Ganzzahl eingeben!");	
         }
+        // Kleine Spielerei, relevant für alles unter den beiden dicken grünen Strichen
+        if(userInput.matches("101010"))
+        {
+            startBinaryConverter(); 
+            System.exit(0);
+        } 
         return Long.parseLong(userInput);
+    }
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Wie oben, nur dass jetzt ausschließlich 1 und 0 als gültige Eingaben akzeptiert werden
+    static long validateUserInputOnlyBinaryFormat()
+    {
+        String userInput = "";
+        while(!userInput.matches("[0-1]+"))
+        {
+            userInput = JOptionPane.showInputDialog("Bitte Binärzahl im Format 100100110 eingeben!");	
+        }
+        return Long.parseLong(userInput);
+    }
+
+    // Umwandlung von Binär zu Dezimal mit anderem Ansatz als oben. Sieht erstmal schlimmer aus als es ist:
+    // Die Eingabe wird erstmal umgedreht (reverse), aus 1100 (also dezimal 12) wird dann zB 0011. Diese Folge
+    // wird dann als Array gespeichert (haben wir bald), kurz gesagt ist das eine Kette von Variablen die einen
+    // unterschiedlichen Wert haben können, aber den gleichen Datentyp haben müssen. Die Werte werden dann nacheinander
+    // an den Positionen im Array gespeichert, die Index heißen. Gezählt wird immer ab 0 aufsteigend. Wir haben also
+    // jetzt:
+    // Index   Wert
+    //     0   0
+    //     0   0
+    //     0   1
+    //     0   1
+    //
+    // Im Loop, der solange läuft bis i so groß wie die Arraylänge ist wird nun einfach jedesmal wenn an der
+    // Indexposition die wir gerade untersuchen eine 1 gefunden wird 2 hoch der Indexnummer zu decimalReturnValue
+    // hinzugefügt. Anschließend wir der Wert zurückgegeben. 
+    static long convertFromBinaryToDecimal(String binaryNumberInput)
+    {
+        long decimalReturnValue = 0;
+        String reverseInput = new StringBuilder(new String(binaryNumberInput)).reverse().toString();
+        char[] singleBits = reverseInput.toCharArray();
+
+        for(int i = 0; i < singleBits.length ; i++)
+        {
+            if(singleBits[i] == '1') decimalReturnValue += Math.pow(2, i);
+        }
+        return decimalReturnValue;
+    }
+
+    // Dies ist einfach nur die Methode um den Input und die Ausgabe aufzurufen, sobald jemand bei der Abfrage nach der Dezimalzahl 101010 eingibt
+    static void startBinaryConverter()
+    {
+        long binaryToCalculate = validateUserInputOnlyBinaryFormat();
+        JOptionPane.showMessageDialog(new JFrame(), binaryToCalculate + " als Ganzzahl: " + convertFromBinaryToDecimal(Long.toString(binaryToCalculate)), "Binary to Decimal Tool", JOptionPane.PLAIN_MESSAGE);
     }
 }
