@@ -26,7 +26,7 @@ public class DecimalToBinaryTool
         // konsequenterweise mittels einer GUI, da die Abfrage ja auch dadurch erfolgt ist. 
         // Die dritte Methode printBitCount wird direkt in der Ausgabe abgerufen und ihr Wert ausgegeben 
         JOptionPane.showMessageDialog(new JFrame(), valueToCalculate + " in Binärschreibweise: " + binaryValue + "\n" +
-        binaryValue + " enthält " + printBitCount() + " zusammenhängende Bits.", "Decimal To Binary Tool", JOptionPane.PLAIN_MESSAGE);
+        "Dieser Wert enthält " + printBitCount() + " zusammenhängende Bits.", "Decimal To Binary Tool", JOptionPane.PLAIN_MESSAGE);
 	}
     
     
@@ -145,6 +145,6 @@ public class DecimalToBinaryTool
         {
             userInput = JOptionPane.showInputDialog("Bitte gültige Ganzzahl eingeben!");	
         }
-        return Integer.parseInt(userInput);
+        return Long.parseLong(userInput);
     }
 }

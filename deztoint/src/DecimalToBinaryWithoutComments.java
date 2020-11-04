@@ -71,6 +71,6 @@ public class DecimalToBinaryWithoutComments
         {
             userInput = JOptionPane.showInputDialog("Bitte gültige Ganzzahl eingeben!");	
         }
-        return Integer.parseInt(userInput);
+        return Long.parseLong(userInput);
     }
 }
